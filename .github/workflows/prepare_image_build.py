@@ -103,21 +103,30 @@ for imagePrefix in json.loads(imagePrefixies):
     if imagePrefix.startswith("ghcr.io/"):
         # check if we have GHCR cred
         if context["secrets"].get("github_token") is None:
+            print("loginGHCR=false", file=githubOutput)
             continue
+        else:
+            print("loginGHCR=true", file=githubOutput)
     elif imagePrefix.startswith("public.ecr.aws/"):
         # check if we have ECR cred
         if (
             context["secrets"].get("AWS_ACCESS_KEY_ID") is None
             or context["secrets"].get("AWS_SECRET_ACCESS_KEY") is None
         ):
+            print("loginECR=false", file=githubOutput)
             continue
+        else:
+            print("loginECR=true", file=githubOutput)
     else:
         # check if we have Docker Hub cred
         if (
             context["secrets"].get("DOCKERHUB_USERNAME") is None
             or context["secrets"].get("DOCKERHUB_TOKEN") is None
         ):
+            print("loginDockerHub=false", file=githubOutput)
             continue
+        else:
+            print("loginDockerHub=true", file=githubOutput)
 
     for tag in tags:
         imageFullTags.append(imagePrefix + imageName + ":" + tag)
