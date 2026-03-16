@@ -13,5 +13,3 @@ jobs:
     uses: ./.github/workflows/image-build.yml
     with:
       image: magic-service
-    secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
