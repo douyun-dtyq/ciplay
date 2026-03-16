@@ -7,10 +7,6 @@ on:
         description: 'Image name (see magicrew.yml)'
         required: true
         type: string
-      githubToken:
-        description: 'GitHub token'
-        required: true
-        type: string
 
 env:
   CONTAINER_PLATFORMS: linux/amd64,linux/arm64
