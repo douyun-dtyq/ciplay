@@ -92,7 +92,7 @@ imagePrefixies = context["vars"].get("IMAGE_PREFIXIES", '["ghcr.io/dtyq/", "", "
 for imagePrefix in json.loads(imagePrefixies):
     if imagePrefix.startswith("ghcr.io/"):
         # check if we have GHCR cred
-        if context["secrets"].get("GITHUB_TOKEN") is None:
+        if context["secrets"].get("github_token") is None:
             continue
     elif imagePrefix.startswith("public.ecr.aws/"):
         # check if we have ECR cred
