@@ -14,8 +14,9 @@ defaultBuildArgs = {
     "APK_MIRROR": "dl-cdn.alpinelinux.org",
     "APT_MIRROR": "deb.debian.org",
     "PIP_INDEX_URL": "https://pypi.org/simple",
-    "COMPOSER_MIRROR": ""
+    "COMPOSER_MIRROR": "",
 }
+
 
 class ImageDescription(TypedDict):
     # match Build struct in cli image/build.go
@@ -25,9 +26,11 @@ class ImageDescription(TypedDict):
     tags: list[str]
     platforms: list[str]
 
+
 class MagicrewStructure(TypedDict):
     # match MagicrewStructure struct in cli code/code.go
     images: dict[str, ImageDescription]
+
 
 # open github output file
 githubOutput = open(os.environ["GITHUB_OUTPUT"], "w")
@@ -40,7 +43,9 @@ imageName = context["inputs"]["imageName"]
 
 # read magicrew structure from file
 magicrewStructureFile = open("magicrew.yml", "r")
-magicrewStructure: MagicrewStructure = yaml.load(magicrewStructureFile, Loader=yaml.Loader)
+magicrewStructure: MagicrewStructure = yaml.load(
+    magicrewStructureFile, Loader=yaml.Loader
+)
 magicrewStructureFile.close()
 
 imageDesc = magicrewStructure["images"].get(imageName)
@@ -57,7 +62,10 @@ githubOutput.write(f"platforms={platforms}\n")
 # output context
 contextDir = imageDesc.get("context")
 if contextDir is None:
-    print(f"context for image {imageName} not found in magicrew structure", file=sys.stderr)
+    print(
+        f"context for image {imageName} not found in magicrew structure",
+        file=sys.stderr,
+    )
     sys.exit(1)
 githubOutput.write(f"context={contextDir}\n")
 
@@ -66,7 +74,7 @@ buildArgs = defaultBuildArgs.copy()
 if imageDesc.get("buildArgs"):
     buildArgs.update(imageDesc.get("buildArgs"))
 buildArgsLFSplited = "\n".join([f"{key}={value}" for key, value in buildArgs.items()])
-buildArgsJSON=json.dumps(buildArgsLFSplited)
+buildArgsJSON = json.dumps(buildArgsLFSplited)
 githubOutput.write(f"buildArgs<<EOF\n{buildArgsLFSplited}\nEOF\n")
 
 # generate tags
@@ -88,7 +96,9 @@ for tagPolicy in json.loads(tagsPolicy):
         sys.exit(1)
 
 imageFullTags = []
-imagePrefixies = context["vars"].get("IMAGE_PREFIXIES", '["ghcr.io/dtyq/", "", "public.ecr.aws/dtyq/"]')
+imagePrefixies = context["vars"].get(
+    "IMAGE_PREFIXIES", '["ghcr.io/dtyq/", "", "public.ecr.aws/dtyq/"]'
+)
 for imagePrefix in json.loads(imagePrefixies):
     if imagePrefix.startswith("ghcr.io/"):
         # check if we have GHCR cred
@@ -96,15 +106,21 @@ for imagePrefix in json.loads(imagePrefixies):
             continue
     elif imagePrefix.startswith("public.ecr.aws/"):
         # check if we have ECR cred
-        if context["secrets"].get("AWS_ACCESS_KEY_ID") is None or context["secrets"].get("AWS_SECRET_ACCESS_KEY") is None:
+        if (
+            context["secrets"].get("AWS_ACCESS_KEY_ID") is None
+            or context["secrets"].get("AWS_SECRET_ACCESS_KEY") is None
+        ):
             continue
     else:
         # check if we have Docker Hub cred
-        if context["secrets"].get("DOCKERHUB_USERNAME") is None or context["secrets"].get("DOCKERHUB_TOKEN") is None:
+        if (
+            context["secrets"].get("DOCKERHUB_USERNAME") is None
+            or context["secrets"].get("DOCKERHUB_TOKEN") is None
+        ):
             continue
-    
+
     for tag in tags:
-        imageFullTags.append(imagePrefix + context["imageName"] + ":" + tag)
+        imageFullTags.append(imagePrefix + imageName + ":" + tag)
 
 if len(imageFullTags) == 0:
     print("no image tags to build, are secrets set?", file=sys.stderr)
