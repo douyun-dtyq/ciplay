@@ -53,7 +53,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ inputs.githubToken }}
+          password: ${{ secrets.token }}
       
       - name: Login to ECR
         if: contains(steps.prepare.outputs.imageFullTags, 'ecr.aws')

@@ -10,13 +10,8 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Build and push image
-        uses: ./.github/workflows/image-build.yml
-        with:
-          image: magic-service
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
+    uses: ./.github/workflows/image-build.yml
+    with:
+      image: magic-service
+    secrets:
+      personal_access_token: ${{ secrets.token }}
