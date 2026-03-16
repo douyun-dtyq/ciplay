@@ -14,21 +14,9 @@ on:
         required: true
         type: string
 
-env:
-  CONTAINER_PLATFORMS: linux/amd64,linux/arm64
-  DEFAULT_BUILD_ARGS: |
-    {
-      "TZ": "UTC",
-      "GOPROXY": "",
-      "APK_MIRROR": "dl-cdn.alpinelinux.org",
-      "APT_MIRROR": "deb.debian.org",
-      "PIP_INDEX_URL": "https://pypi.org/simple",
-      "COMPOSER_MIRROR": ""
-    }
-
 jobs:
   build:
-    name: Build and push image ${{ inputs.imageName }}
+    name: Build and push image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
