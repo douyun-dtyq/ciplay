@@ -12,6 +12,7 @@ concurrency:
 
 jobs:
   build:
+    name: Build and push magic-service image
     uses: ./.github/workflows/image-build.yml
     with:
       imageName: magic-service
