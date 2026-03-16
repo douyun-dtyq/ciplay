@@ -1,9 +1,15 @@
-name: Build and push container images
+name: Build and push container image
 
 on:
   workflow_call:
     inputs:
-      image:
+      imageName:
+        description: 'Image name (see magicrew.yml)'
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      imageName:
         description: 'Image name (see magicrew.yml)'
         required: true
         type: string
@@ -32,6 +38,7 @@ jobs:
         shell: python3 -u ./.github/workflows/prepare_image_build.py {0}
         run: |
           {
+            "inputs": ${{ toJson(inputs) }},
             "vars": ${{ toJson(vars) }},
             "secrets": ${{ toJson(secrets) }},
             "github": ${{ toJson(github) }}

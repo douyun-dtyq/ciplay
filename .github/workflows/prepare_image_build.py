@@ -36,7 +36,7 @@ githubOutput = open(os.environ["GITHUB_OUTPUT"], "w")
 contextFile = open(sys.argv[1], "r")
 context = json.load(contextFile)
 contextFile.close()
-imageName = context["github"]["event"]["inputs"]["image"]
+imageName = context["inputs"]["imageName"]
 
 # read magicrew structure from file
 magicrewStructureFile = open("magicrew.yml", "r")
