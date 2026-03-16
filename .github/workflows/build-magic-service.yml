@@ -1,3 +1,5 @@
+name: Build and push magic-service image
+
 on:
   workflow_dispatch:
   push:

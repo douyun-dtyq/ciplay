@@ -34,7 +34,7 @@ jobs:
           {
             "vars": ${{ toJson(vars) }},
             "secrets": ${{ toJson(secrets) }},
-            "github": ${{ toJson(github) }},
+            "github": ${{ toJson(github) }}
           }
 
       - name: Set up QEMU
